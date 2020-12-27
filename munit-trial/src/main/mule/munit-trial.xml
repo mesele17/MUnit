@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="5751d30e-00a9-448b-bcc5-f4447ab029a9" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<flow name="munit-trialFlow" doc:id="288a8193-ed92-4ffe-b563-47f1aef5e784" >
+		<http:listener doc:name="Listener" doc:id="eca06057-fb8e-46df-8f2f-bb1d2c266bbb" config-ref="HTTP_Listener_config" path="/m"/>
+		<set-payload value='#[{
+	"Name": "Mesele",
+	"Age": 37,
+	"Position": "Mulesoft Developer"
+}]' doc:name="Set Payload" doc:id="c5121347-3f1c-4c08-b21d-2939beb6bdb2" />
+		<ee:transform doc:name="Transform Message" doc:id="1c396a7b-2e7e-4e62-9e41-7277c9473e8e" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="d2f8d09c-e2a5-4045-b77d-f0eb79f9d459" message="#[payload]"/>
+	</flow>
+</mule>
